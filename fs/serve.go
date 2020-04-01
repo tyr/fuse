@@ -416,7 +416,7 @@ func (s *Server) Serve(fs FS) error {
 	}
 	quit := make(chan int)
  	reqChan := make(chan fuse.Request, nworkers * 4)
- 	for i := 0; i < ncpu; i++ {
+ 	for i := 0; i < nworkers; i++ {
  		s.wg.Add(1)
  		go func() {
  			defer s.wg.Done()
