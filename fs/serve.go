@@ -410,9 +410,13 @@ func (s *Server) Serve(fs FS) error {
 	})
 	s.handle = append(s.handle, nil)
 	
+	nworkers := runtime.NumCPU()
+	if nworkers < 8 {
+		nworkers = 8	
+	}
 	quit := make(chan int)
- 	reqChan := make(chan fuse.Request, 32)
- 	for i := 0; i < 8; i++ {
+ 	reqChan := make(chan fuse.Request, nworkers * 4)
+ 	for i := 0; i < ncpu; i++ {
  		s.wg.Add(1)
  		go func() {
  			defer s.wg.Done()
